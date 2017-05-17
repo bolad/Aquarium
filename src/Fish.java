@@ -69,4 +69,22 @@ public class Fish {
 
     }
 
+    /*
+    The drawFishImage method is used to draw the fish when needed in the memory-based
+    image before that image is flashed onto the screen. This method is passed the graphics object
+    it should use to draw the fish. Here, if the image of the fish is going to the left use a
+    negative x velocity and vice versa
+     */
+
+    public void drawFishImage(Graphics graphics) {
+
+        if(velocity.x < 0) {
+            graphics.drawImage(image1, location.x, location.y, tank);
+        }
+        else{
+            graphics.drawImage(image2, location.x, location.y, tank);
+        }
+    }
+
+
 }

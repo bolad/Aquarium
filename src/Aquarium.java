@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -23,24 +22,27 @@ public class Aquarium extends Frame implements Runnable {
 
     int sleepTime = 110; //how long the thread sleeps between moving individual fish
 
-    Vector<Fish> fishes = new Vector<>();
+    Vector<Fish> fishes = new Vector<>(); //keeps track of the fish objects
 
     Fish fish;
 
-    boolean runOk = true;
+    boolean runOk = true; // used to end the thread when the application is ended
 
     Thread thread;
 
     public Aquarium() {
-        setTitle("Stanley's Aquarium");
-        tracker = new MediaTracker(this);
 
-        fishImages[0] = Toolkit.getDefaultToolkit().getImage("/Users/bolad/Desktop/Programming/JAVA/Java After Hours/code/ch01/fish1.gif");
+        setTitle("Stanley's Aquarium");
+
+        tracker = new MediaTracker(this); //the this keyword here passes reference to current instance of a MediaTracker
+
+        fishImages[0] = Toolkit.getDefaultToolkit().getImage("fish1.gif");
         tracker.addImage(fishImages[0], 0);
-        fishImages[1] = Toolkit.getDefaultToolkit().getImage("/Users/bolad/Desktop/Programming/JAVA/Java After Hours/code/ch01/fish2.gif");
+
+        fishImages[1] = Toolkit.getDefaultToolkit().getImage("fish2.gif");
         tracker.addImage(fishImages[1], 0);
 
-        aquariumImage = Toolkit.getDefaultToolkit().getImage("/Users/bolad/Desktop/Programming/JAVA/Java After Hours/code/ch01/bubbles.gif");
+        aquariumImage = Toolkit.getDefaultToolkit().getImage("bubbles.gif");
         tracker.addImage(aquariumImage, 0);
 
         try {
@@ -100,18 +102,33 @@ public class Aquarium extends Frame implements Runnable {
             } catch (Exception e){
                 System.out.println(e.getMessage());
             }
+            /*
+            the repaint calls the update method, which is where
+            flickering usually happens, because by default, the update
+            method first redraws the entire window using the background
+            window color.
+             */
             repaint();
         }
 
     }
-
+    /*
+    You can draw the background image in the memory image with the drawImage method
+    by passing it the image to draw, the X and Y location at which to draw the new image,
+    and an object that acts as an image observer in case you want to be notified of the
+    events that happen as the image is loaded (Aquarium doesn't make use of these events,
+    so the code simply passes the current object as the image observer)
+     */
     public void update(Graphics graphics) {
 
         memoryGraphics.drawImage(aquariumImage, 0, 0, this);
 
+        //draw each fish in the memory image
         for (int i=0; i<numberOfFish; i++){
             fishes.elementAt(i).drawFishImage(memoryGraphics);
         }
+
+        //flash the offscreen image(memoryImage) onto the screen with minimum flicker
         graphics.drawImage(memoryImage, 0, 0, this);
 
     }
